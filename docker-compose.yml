@@ -1,0 +1,22 @@
+services:
+  sqlserver:
+      container_name: sqlserver
+      image: mcr.microsoft.com/mssql/server:2022-latest
+      environment:
+        - ACCEPT_EULA=Y
+        - SA_PASSWORD=Root_12345
+      expose:
+        - 1433
+      ports:
+        - 1433:1433
+  product-service:
+    build:
+      context: ./ProductService
+    ports:
+      - "8001:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=host.docker.internal;Database=ProductDb;user=sa;Password=Root_12345;Encrypt=false;
+    depends_on:
+      - sqlserver
+    restart: on-failure
