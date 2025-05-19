@@ -20,3 +20,14 @@ services:
     depends_on:
       - sqlserver
     restart: on-failure
+  order-service:
+    build:
+      context: ./OrderService
+    ports:
+      - "8002:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=host.docker.internal;Database=OrderDb;user=sa;Password=Root_12345;Encrypt=false;
+    depends_on:
+      - sqlserver
+    restart: on-failure
